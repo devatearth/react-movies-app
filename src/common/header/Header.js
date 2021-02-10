@@ -10,6 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import propTypes from "prop-types";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const customStyles = {
   content: {
@@ -26,12 +27,11 @@ const TabContainer = function (props) {
     <Typography component="div" style={{ padding: 10, textAlign: "center" }}>
       {props.children}
     </Typography>
-  )
+  );
 };
 
-
 TabContainer.propTypes = {
-  children: propTypes.node.isRequired
+  children: propTypes.node.isRequired,
 };
 class Header extends Component {
   constructor() {
@@ -39,6 +39,8 @@ class Header extends Component {
     this.state = {
       modalIsOpen: false,
       value: 0,
+      usernameRequired: "dispNone",
+      username: "",
     };
   }
 
@@ -52,7 +54,15 @@ class Header extends Component {
   tabChangeHandler = (event, value) => {
     this.setState({ value });
   };
+  loginClickHandler = () => {
+    this.state.username === ""
+      ? this.setState({ usernameRequired: "dispBlock" })
+      : this.setState({ usernameRequired: "dispNone" });
+  };
 
+  inputUsernameChangeHandler = (e) => {
+    this.setState({ username: e.target.value });
+  };
   render() {
     return (
       <div>
@@ -87,7 +97,15 @@ class Header extends Component {
             <TabContainer>
               <FormControl required>
                 <InputLabel htmlFor="UserName">Username</InputLabel>
-                <Input id="UserName" type="text"></Input>
+                <Input
+                  id="username"
+                  type="text"
+                  username={this.state.username}
+                  onChange={this.inputUsernameChangeHandler}
+                />
+                <FormHelperText className={this.state.usernameRequired}>
+                  <span className="red">required</span>
+                </FormHelperText>
               </FormControl>
               <br />
               <br />
@@ -97,7 +115,7 @@ class Header extends Component {
               </FormControl>
               <br />
               <br />
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={this.loginClickHandler}>
                 LOGIN
               </Button>
             </TabContainer>
